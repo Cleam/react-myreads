@@ -1,36 +1,55 @@
-import React from "react";
-import SearchBooks from "./SearchBooks";
-import ListBooks from './ListBooks'
-// import * as BooksAPI from './BooksAPI'
-import "./App.css";
+import React from 'react';
+import SearchBooks from './SearchBooks';
+import { Route } from 'react-router-dom';
+import ListBooks from './ListBooks';
+import * as BooksAPI from './BooksAPI';
+import './App.css';
 
 class BooksApp extends React.Component {
   state = {
-    /**
-     * TODO: Instead of using this state variable to keep track of which page
-     * we're on, use the URL in the browser's address bar. This will ensure that
-     * users can use the browser's back and forward buttons to navigate between
-     * pages, as well as provide a good URL they can bookmark and share.
-     */
-    showSearchPage: false
+    booksData: []
+  };
+
+  componentDidMount() {
+    BooksAPI.getAll().then(data => {
+      this.setState({
+        booksData: data
+      });
+    });
+  }
+
+  /**
+   * 更新书本信息
+   * @param  {Object} book 需要更新的书
+   * @param  {String} shelf 该书所在书架
+   */
+  updateBooks = (book, shelf) => {
+    BooksAPI.update(book, shelf).then(bk => {
+      this.setState({
+        booksData: this.state.booksData.map(b => {
+          if (b.id === book.id) {
+            b.shelf = shelf;
+          }
+          return b;
+        })
+      });
+    });
   };
 
   render() {
     return (
       <div className="app">
-        {this.state.showSearchPage ? (
-          <SearchBooks onHideSearch={() => {
-            this.setState({
-              showSearchPage: false
-            })
-          }} />
-        ) : (
-          <ListBooks onShowSearch={() => {
-            this.setState({
-              showSearchPage: true
-            })
-          }} />
-        )}
+        <Route path="/search" component={SearchBooks} />
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <ListBooks
+              booksData={this.state.booksData}
+              updateBooks={this.updateBooks}
+            />
+          )}
+        />
       </div>
     );
   }
