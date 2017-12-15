@@ -6,11 +6,11 @@ import PropTypes from 'prop-types';
 class ListBooks extends React.Component {
   static propTypes = {
     booksData: PropTypes.array.isRequired,
-    updateBooks: PropTypes.func.isRequired
+    updateBook: PropTypes.func.isRequired
   };
 
   render() {
-    const { booksData, updateBooks } = this.props;
+    const { booksData, updateBook } = this.props;
     if (!booksData || booksData.length === 0) {
       return null;
     }
@@ -18,11 +18,8 @@ class ListBooks extends React.Component {
     const currentlyReading = booksData.filter(
       b => b.shelf === 'currentlyReading'
     );
-    // console.log('currentlyReading: ', currentlyReading);
     const wantToRead = booksData.filter(b => b.shelf === 'wantToRead');
-    // console.log('wantToRead: ', wantToRead);
     const read = booksData.filter(b => b.shelf === 'read');
-    // console.log('concat: ', wantToRead.concat(read));
     return (
       <div className="list-books">
         <div className="list-books-title">
@@ -51,7 +48,7 @@ class ListBooks extends React.Component {
                           <div className="book-shelf-changer">
                             <select
                               value={book.shelf}
-                              onChange={e => updateBooks(book, e.target.value)}
+                              onChange={e => updateBook(book, e.target.value)}
                             >
                               <option value="none" disabled>
                                 Move to...
@@ -95,7 +92,7 @@ class ListBooks extends React.Component {
                           <div className="book-shelf-changer">
                             <select
                               value={book.shelf}
-                              onChange={e => updateBooks(book, e.target.value)}
+                              onChange={e => updateBook(book, e.target.value)}
                             >
                               <option value="none" disabled>
                                 Move to...
@@ -138,7 +135,7 @@ class ListBooks extends React.Component {
                           <div className="book-shelf-changer">
                             <select
                               value={book.shelf}
-                              onChange={e => updateBooks(book, e.target.value)}
+                              onChange={e => updateBook(book, e.target.value)}
                             >
                               <option value="none" disabled>
                                 Move to...

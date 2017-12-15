@@ -11,6 +11,13 @@ class BooksApp extends React.Component {
   };
 
   componentDidMount() {
+    this.getAll();
+  }
+
+  /**
+   * 获取所有书架上的书
+   */
+  getAll() {
     BooksAPI.getAll().then(data => {
       this.setState({
         booksData: data
@@ -23,30 +30,26 @@ class BooksApp extends React.Component {
    * @param  {Object} book 需要更新的书
    * @param  {String} shelf 该书所在书架
    */
-  updateBooks = (book, shelf) => {
-    BooksAPI.update(book, shelf).then(bk => {
-      this.setState({
-        booksData: this.state.booksData.map(b => {
-          if (b.id === book.id) {
-            b.shelf = shelf;
-          }
-          return b;
-        })
-      });
+  updateBook = (book, shelf) => {
+    return BooksAPI.update(book, shelf).then(() => {
+      this.getAll();
     });
   };
 
   render() {
     return (
       <div className="app">
-        <Route path="/search" component={SearchBooks} />
+        <Route
+          path="/search"
+          render={() => <SearchBooks updateBook={this.updateBook} />}
+        />
         <Route
           exact
           path="/"
           render={() => (
             <ListBooks
               booksData={this.state.booksData}
-              updateBooks={this.updateBooks}
+              updateBook={this.updateBook}
             />
           )}
         />
