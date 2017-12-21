@@ -7,6 +7,7 @@ class SearchBooks extends React.Component {
     super(props);
     this.timer = null;
   }
+  // eslint-disable-next-line
   static propTypes = {
     updateBook: PropTypes.func.isRequired
   };
@@ -22,7 +23,7 @@ class SearchBooks extends React.Component {
     if (!query) {
       return null;
     }
-    this.timer && (clearTimeout(this.timer), (this.timer = null));
+    this.timer && clearTimeout(this.timer);
     this.timer = setTimeout(() => {
       BooksAPI.search(query).then(books => {
         console.log('search books: ', books);
