@@ -115,8 +115,18 @@ body, .app {
   flex-wrap: wrap;
 }
 .books-grid li {
+  position: relative;
   padding: 10px 15px;
   text-align: left;
+}
+
+.books-grid li > .search-book-tag {
+  position: absolute;
+  z-index: 2;
+  background-color: rgba(0,0,0,0.4);
+  color: #fff;
+  padding: 0 5px;
+  font-size: 12px;
 }
 
 .book {
@@ -135,7 +145,7 @@ body, .app {
 
 .book-top {
   position: relative;
-  height: 200px;
+  /* height: 200px; */
   display: flex;
   align-items: flex-end;
 }

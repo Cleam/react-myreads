@@ -9,6 +9,7 @@ class SearchBooks extends React.Component {
   }
   // eslint-disable-next-line
   static propTypes = {
+    shelfbooks: PropTypes.array.isRequired,
     updateBook: PropTypes.func.isRequired
   };
   // eslint-disable-next-line
@@ -23,21 +24,27 @@ class SearchBooks extends React.Component {
     if (!query) {
       return null;
     }
-    this.timer && clearTimeout(this.timer);
-    this.timer = setTimeout(() => {
-      BooksAPI.search(query).then(books => {
-        console.log('search books: ', books);
-        if (!(books instanceof Array)) {
-          this.setState({
-            books: []
+    BooksAPI.search(query).then(searchbooks => {
+      if (searchbooks instanceof Array) {
+        // console.log('shelfbooks: ', this.props.shelfbooks);
+        // console.log('searchbooks: ', searchbooks);
+        searchbooks.map(searchbook => {
+          this.props.shelfbooks.forEach(shelfbook => {
+            if (searchbook.id === shelfbook.id) {
+              searchbook.shelf = shelfbook.shelf;
+            }
           });
-        } else {
-          this.setState({
-            books: books
-          });
-        }
-      });
-    }, 200);
+          return searchbook;
+        });
+        this.setState({
+          books: searchbooks
+        });
+      } else {
+        this.setState({
+          books: []
+        });
+      }
+    });
   }
   /**
    * 更新书本信息
@@ -47,8 +54,11 @@ class SearchBooks extends React.Component {
   updateBk(book, shelf) {
     this.props.updateBook(book, shelf).then(() => {
       this.setState({
-        books: this.state.books.filter(bk => {
-          return bk.id !== book.id;
+        books: this.state.books.map(bk => {
+          if (bk.id === book.id) {
+            bk.shelf = shelf;
+          }
+          return bk;
         })
       });
     });
@@ -65,7 +75,11 @@ class SearchBooks extends React.Component {
             <input
               type="text"
               placeholder="Search by title or author"
-              onChange={e => this.search(e.target.value)}
+              onKeyPress={e => {
+                if (e.key === 'Enter') {
+                  this.search(e.target.value);
+                }
+              }}
             />
           </div>
         </div>
@@ -73,7 +87,7 @@ class SearchBooks extends React.Component {
           <ol className="books-grid">
             {this.state.books.map(book => (
               <li key={book.id}>
-                {book.shelf}
+                <span className="search-book-tag">{book.shelf}</span>
                 <div className="book">
                   <div className="book-top">
                     <div

@@ -6,6 +6,7 @@ import * as BooksAPI from './BooksAPI';
 import './App.css';
 
 class BooksApp extends React.Component {
+  // eslint-disable-next-line
   state = {
     booksData: []
   };
@@ -30,7 +31,7 @@ class BooksApp extends React.Component {
    * @param  {Object} book 需要更新的书
    * @param  {String} shelf 该书所在书架
    */
-  updateBook = (book, shelf) => {
+  updateBook = (book, shelf) => { // eslint-disable-line
     return BooksAPI.update(book, shelf).then(() => {
       this.getAll();
     });
@@ -41,7 +42,7 @@ class BooksApp extends React.Component {
       <div className="app">
         <Route
           path="/search"
-          render={() => <SearchBooks updateBook={this.updateBook} />}
+          render={() => <SearchBooks shelfbooks={this.state.booksData} updateBook={this.updateBook} />}
         />
         <Route
           exact
