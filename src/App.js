@@ -33,7 +33,14 @@ class BooksApp extends React.Component {
    */
   updateBook = (book, shelf) => { // eslint-disable-line
     return BooksAPI.update(book, shelf).then(() => {
-      this.getAll();
+      this.setState({
+        books: this.state.booksData.map(bk => {
+          if (bk.id === book.id) {
+            bk.shelf = shelf;
+          }
+          return bk;
+        })
+      });
     });
   };
 
